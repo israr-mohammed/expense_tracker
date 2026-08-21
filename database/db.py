@@ -1,5 +1,90 @@
-# Students will write this file in Step 1 — Database Setup
-# This file should contain:
-#   get_db()   — returns a SQLite connection with row_factory and foreign keys enabled
-#   init_db()  — creates all tables using CREATE TABLE IF NOT EXISTS
-#   seed_db()  — inserts sample data for development
+import sqlite3
+from pathlib import Path
+
+from werkzeug.security import generate_password_hash
+
+DB_PATH = Path(__file__).parent.parent / "expense_tracker.db"
+
+
+def get_db():
+    conn = sqlite3.connect(DB_PATH)
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA foreign_keys = ON")
+    return conn
+
+
+def init_db():
+    conn = get_db()
+    conn.executescript("""
+        CREATE TABLE IF NOT EXISTS users (
+            id            INTEGER PRIMARY KEY AUTOINCREMENT,
+            name          TEXT NOT NULL,
+            email         TEXT NOT NULL UNIQUE,
+            password_hash TEXT NOT NULL,
+            created_at    TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE IF NOT EXISTS expenses (
+            id          INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id     INTEGER NOT NULL,
+            amount      REAL NOT NULL,
+            category    TEXT NOT NULL CHECK (category IN
+                            ('Bills', 'Food', 'Health', 'Transport', 'Others')),
+            description TEXT,
+            date        TEXT NOT NULL,
+            created_at  TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+        );
+
+        CREATE INDEX IF NOT EXISTS idx_expenses_user_id ON expenses (user_id);
+    """)
+    conn.commit()
+    conn.close()
+
+
+def seed_db():
+    conn = get_db()
+    cur = conn.cursor()
+
+    cur.execute("SELECT COUNT(*) FROM users")
+    if cur.fetchone()[0] > 0:
+        conn.close()
+        return  # already seeded — dev-only guard, not a migration system
+
+    sample_users = [
+        ("Alice Sharma", "alice@example.com", generate_password_hash("password123")),
+        ("Bob Mehta", "bob@example.com", generate_password_hash("password123")),
+    ]
+    cur.executemany(
+        "INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)",
+        sample_users,
+    )
+    conn.commit()
+
+    alice_id = cur.execute(
+        "SELECT id FROM users WHERE email = ?", ("alice@example.com",)
+    ).fetchone()["id"]
+    bob_id = cur.execute(
+        "SELECT id FROM users WHERE email = ?", ("bob@example.com",)
+    ).fetchone()["id"]
+
+    sample_expenses = [
+        (alice_id, 4500.00, "Bills", "Electricity bill", "2026-08-01"),
+        (alice_id, 320.50, "Food", "Groceries", "2026-08-05"),
+        (alice_id, 205.00, "Health", "Pharmacy", "2026-08-10"),
+        (bob_id, 180.00, "Transport", "Metro card top-up", "2026-08-03"),
+        (bob_id, 90.00, "Others", "Misc purchase", "2026-08-12"),
+    ]
+    cur.executemany(
+        """INSERT INTO expenses (user_id, amount, category, description, date)
+           VALUES (?, ?, ?, ?, ?)""",
+        sample_expenses,
+    )
+    conn.commit()
+    conn.close()
+
+
+if __name__ == "__main__":
+    init_db()
+    seed_db()
+    print(f"Database initialized at {DB_PATH}")
