@@ -581,6 +581,75 @@ a { color: inherit; text-decoration: none; }
     color: var(--accent);
     white-space: nowrap;
     text-decoration: none;
+    cursor: pointer;
+}
+
+/* ------------------------------------------------------------------ */
+/* Hero video modal                                                    */
+/* ------------------------------------------------------------------ */
+
+.video-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.video-modal.is-open { display: flex; }
+
+.video-modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 15, 15, 0.72);
+}
+
+.video-modal-box {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 760px;
+    background: var(--paper-card);
+    border-radius: var(--radius-lg);
+    padding: 0.75rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+
+.video-modal-close {
+    position: absolute;
+    top: -2.75rem;
+    right: 0;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: var(--paper-card);
+    color: var(--ink);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.video-modal-close:hover { background: var(--border-soft); }
+
+.video-modal-frame {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: var(--ink);
+}
+
+.video-modal-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
 }
 
 /* ------------------------------------------------------------------ */
