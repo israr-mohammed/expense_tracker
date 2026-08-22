@@ -53,6 +53,7 @@ def register():
         )
 
     session["user_id"] = user_id
+    session["user_name"] = name
     return redirect(url_for("profile"))
 
 
@@ -71,6 +72,7 @@ def login():
         return render_template("login.html", error="Invalid email or password.")
 
     session["user_id"] = user["id"]
+    session["user_name"] = user["name"]
     return redirect(url_for("profile"))
 
 
@@ -94,9 +96,47 @@ def privacy():
 # Placeholder routes — students will implement these                  #
 # ------------------------------------------------------------------ #
 
+PROFILE_USER = {
+    "name": "Priya Nair",
+    "initials": "PN",
+    "email": "priya.nair@example.com",
+    "member_since": "August 2026",
+}
+
+PROFILE_STATS = {
+    "total_spent": 5295.50,
+    "transaction_count": 5,
+    "top_category": "Bills",
+}
+
+PROFILE_TRANSACTIONS = [
+    {"date": "2026-08-10", "description": "Pharmacy", "category": "Health", "amount": 205.00},
+    {"date": "2026-08-05", "description": "Groceries", "category": "Food", "amount": 320.50},
+    {"date": "2026-08-01", "description": "Electricity bill", "category": "Bills", "amount": 4500.00},
+    {"date": "2026-07-28", "description": "Metro card top-up", "category": "Transport", "amount": 180.00},
+    {"date": "2026-07-20", "description": "Misc purchase", "category": "Others", "amount": 90.00},
+]
+
+PROFILE_BREAKDOWN = [
+    {"category": "Bills", "total": 4500.00, "percent": 85},
+    {"category": "Food", "total": 320.50, "percent": 6},
+    {"category": "Health", "total": 205.00, "percent": 4},
+    {"category": "Transport", "total": 180.00, "percent": 3},
+    {"category": "Others", "total": 90.00, "percent": 2},
+]
+
+
 @app.route("/profile")
 def profile():
-    return "Profile page — coming in Step 4"
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+    return render_template(
+        "profile.html",
+        user=PROFILE_USER,
+        stats=PROFILE_STATS,
+        transactions=PROFILE_TRANSACTIONS,
+        breakdown=PROFILE_BREAKDOWN,
+    )
 
 
 @app.route("/expenses/add")
