@@ -1,7 +1,7 @@
 import sqlite3
 from pathlib import Path
 
-from werkzeug.security import generate_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
 DB_PATH = Path(__file__).parent.parent / "expense_tracker.db"
 
@@ -90,6 +90,15 @@ def get_user_by_email(email):
         "SELECT * FROM users WHERE email = ?", (email,)
     ).fetchone()
     conn.close()
+    return user
+
+
+def verify_user(email, password):
+    user = get_user_by_email(email)
+    if user is None:
+        return None
+    if not check_password_hash(user["password_hash"], password):
+        return None
     return user
 
 
