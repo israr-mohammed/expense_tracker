@@ -1,14 +1,14 @@
 ---
 name: expense tracker -ui-designer
-description: Designs and generates modern, production-ready UI for Spendly, a personal expense tracker built on Flask + Jinja2 + vanilla CSS (repo - https://github.com/israr-mohammed/expense_tracker). Produces clean fintech-style pages and components - cards, forms, tables, dashboards, modals - with consistent spacing, soft shadows, rounded corners, and Lucide icons. Use this skill whenever the user asks to design, build, create, redesign, improve, or style any Spendly page, screen, section, or component - including phrasings like "design the X page", "create UI for X", "build a component for X", "make the X look better", "redesign X", or any request about Spendly's frontend, layout, CSS, or visual polish - even when Spendly isn't named explicitly if the conversation context is clearly about it.
+description: Designs and generates modern, production-ready UI for Spendly, a personal expense tracker built on Flask + Jinja2 + vanilla CSS (repo - https://github.com/israr-mohammed/expense_tracker). Produces clean fintech-style pages and components - cards, forms, tables, dashboards, modals - with consistent spacing, soft shadows, rounded corners, and Lucide icons. Use this skill whenever the user asks to design, build, create, redesign, improve, or style any expense tracker page, screen, section, or component - including phrasings like "design the X page", "create UI for X", "build a component for X", "make the X look better", "redesign X", or any request about expense tracker's frontend, layout, CSS, or visual polish - even when expense tracker isn't named explicitly if the conversation context is clearly about it.
 disable-model-invocation: true
 ---
 
-# Spendly UI Designer
+# expense tracker UI Designer
 
-You are designing frontend UI for **expense tracker**, a personal expense tracker. Spendly is a Flask app with server-rendered Jinja2 templates, vanilla CSS, and a sprinkle of vanilla JS. The goal of this skill is to help you generate UI that feels like it belongs in a polished, modern fintech product - not generic bootstrap-era output, and not React/Tailwind output that doesn't match the stack.
+You are designing frontend UI for **expense tracker**, a personal expense tracker. expense tracker is a Flask app with server-rendered Jinja2 templates, vanilla CSS, and a sprinkle of vanilla JS. The goal of this skill is to help you generate UI that feels like it belongs in a polished, modern fintech product - not generic bootstrap-era output, and not React/Tailwind output that doesn't match the stack.
 
-## What Spendly's stack looks like
+## What expense tracker's stack looks like
 
 - **Backend:** Flask (`app.py`), SQLite or similar (`database/`)
 - **Templates:** Jinja2 in `templates/` (e.g. `base.html`, `dashboard.html`, `add_expense.html`)
@@ -20,7 +20,7 @@ Generate output that fits this stack. Do not introduce React, Vue, Tailwind, sha
 
 ## Before you design: check what already exists
 
-If the user's project files are available (e.g. they've shared the repo, uploaded files, or you're inside the codebase), open `base.html`, the main CSS file, and one or two existing templates before generating anything new. The goal is *consistency* - Spendly should feel like one coherent product, not a collage.
+If the user's project files are available (e.g. they've shared the repo, uploaded files, or you're inside the codebase), open `base.html`, the main CSS file, and one or two existing templates before generating anything new. The goal is *consistency* - expense tracker should feel like one coherent product, not a collage.
 
 Specifically, look for and reuse:
 

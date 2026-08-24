@@ -123,6 +123,8 @@
 .category-badge-health { background: var(--health-light); color: var(--health); }
 .category-badge-transport { background: var(--transport-light); color: var(--transport); }
 .category-badge-others { background: var(--paper-warm); color: var(--ink-faint); }
+.category-badge-entertainment { background: var(--entertainment-light); color: var(--entertainment); }
+.category-badge-shopping { background: var(--shopping-light); color: var(--shopping); }
 
 /* --- Category breakdown --- */
 
