@@ -70,6 +70,35 @@
     padding: 1.25rem 1.5rem;
 }
 
+/* --- Date filter form --- */
+
+.filter-form {
+    display: flex;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem;
+    width: 100%;
+}
+
+.filter-field {
+    margin-bottom: 0;
+}
+
+.filter-field .form-input {
+    width: auto;
+}
+
+.filter-clear {
+    align-self: center;
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    text-decoration: underline;
+}
+
+.filter-clear:hover {
+    color: var(--accent);
+}
+
 /* --- Transaction history table --- */
 
 .profile-panel {
@@ -158,5 +187,10 @@
     .profile-table {
         display: block;
         overflow-x: auto;
+    }
+
+    .filter-form {
+        flex-direction: column;
+        align-items: stretch;
     }
 }

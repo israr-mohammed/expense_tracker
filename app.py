@@ -1,5 +1,6 @@
 import re
 import sqlite3
+from datetime import datetime
 
 from flask import Flask, redirect, render_template, request, session, url_for
 
@@ -111,6 +112,19 @@ def _initials(name):
     return (parts[0][0] + parts[-1][0]).upper()
 
 
+def _parse_date_range(start_raw, end_raw):
+    if not start_raw or not end_raw:
+        return None, None
+    try:
+        start = datetime.strptime(start_raw, "%Y-%m-%d")
+        end = datetime.strptime(end_raw, "%Y-%m-%d")
+    except ValueError:
+        return None, None
+    if start > end:
+        return None, None
+    return start_raw, end_raw
+
+
 @app.route("/profile")
 def profile():
     if not session.get("user_id"):
@@ -121,9 +135,17 @@ def profile():
     user = get_user_by_id(user_id)
     user["initials"] = _initials(user["name"])
 
-    transactions = get_recent_transactions(user_id)
-    stats = get_summary_stats(user_id)
-    breakdown = get_category_breakdown(user_id)
+    start_date, end_date = _parse_date_range(
+        request.args.get("start_date"), request.args.get("end_date")
+    )
+
+    transactions = get_recent_transactions(
+        user_id, start_date=start_date, end_date=end_date
+    )
+    stats = get_summary_stats(user_id, start_date=start_date, end_date=end_date)
+    breakdown = get_category_breakdown(
+        user_id, start_date=start_date, end_date=end_date
+    )
 
     return render_template(
         "profile.html",
@@ -131,6 +153,8 @@ def profile():
         stats=stats,
         transactions=transactions,
         breakdown=breakdown,
+        start_date=start_date,
+        end_date=end_date,
     )
 
 
