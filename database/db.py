@@ -29,7 +29,8 @@ def init_db():
             user_id     INTEGER NOT NULL,
             amount      REAL NOT NULL,
             category    TEXT NOT NULL CHECK (category IN
-                            ('Bills', 'Food', 'Health', 'Transport', 'Others')),
+                            ('Bills', 'Food', 'Health', 'Transport', 'Others',
+                             'Entertainment', 'Shopping')),
             description TEXT,
             date        TEXT NOT NULL,
             created_at  TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -79,6 +80,38 @@ def seed_db():
         """INSERT INTO expenses (user_id, amount, category, description, date)
            VALUES (?, ?, ?, ?, ?)""",
         sample_expenses,
+    )
+    conn.commit()
+
+    conn.execute(
+        "INSERT INTO users (name, email, password_hash, created_at) VALUES (?, ?, ?, ?)",
+        (
+            "Demo User",
+            "demo@expensetracker.com",
+            generate_password_hash("demo123"),
+            "2026-02-15 09:00:00",
+        ),
+    )
+    conn.commit()
+
+    demo_id = cur.execute(
+        "SELECT id FROM users WHERE email = ?", ("demo@expensetracker.com",)
+    ).fetchone()["id"]
+
+    demo_expenses = [
+        (demo_id, 120.00, "Bills", "Electricity bill", "2026-08-02"),
+        (demo_id, 45.00, "Food", "Groceries", "2026-08-05"),
+        (demo_id, 30.00, "Health", "Pharmacy", "2026-08-09"),
+        (demo_id, 25.00, "Transport", "Bus pass", "2026-08-12"),
+        (demo_id, 20.00, "Others", "Misc purchase", "2026-08-14"),
+        (demo_id, 60.24, "Bills", "Internet bill", "2026-08-16"),
+        (demo_id, 28.00, "Entertainment", "Movie tickets", "2026-08-19"),
+        (demo_id, 18.00, "Shopping", "Clothing", "2026-08-22"),
+    ]
+    cur.executemany(
+        """INSERT INTO expenses (user_id, amount, category, description, date)
+           VALUES (?, ?, ?, ?, ?)""",
+        demo_expenses,
     )
     conn.commit()
     conn.close()

@@ -23,4 +23,4 @@ def test_profile_ok_when_logged_in(client):
     response = client.get("/profile")
     assert response.status_code == 200
     assert b"Priya Nair" in response.data
-    assert b"Bills" in response.data
+    assert b"priya.nair@example.com" in response.data

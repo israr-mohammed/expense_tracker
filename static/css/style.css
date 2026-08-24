@@ -20,6 +20,10 @@
     --health-light: #e8edf3;
     --transport: #8b5e83;
     --transport-light: #f0e9ef;
+    --entertainment: #3f8a8c;
+    --entertainment-light: #e6f2f1;
+    --shopping: #b1577e;
+    --shopping-light: #f5e8ee;
     --border: #e4e1da;
     --border-soft: #eeebe4;
 
@@ -488,6 +492,8 @@ a { color: inherit; text-decoration: none; }
 .legend-health { background: var(--health); }
 .legend-transport { background: var(--transport); }
 .legend-others { background: var(--ink-faint); }
+.legend-entertainment { background: var(--entertainment); }
+.legend-shopping { background: var(--shopping); }
 
 .legend-amt {
     margin-left: auto;
