@@ -1,3 +1,4 @@
+import math
 import re
 import sqlite3
 from datetime import datetime
@@ -207,7 +208,7 @@ def add_expense():
     except ValueError:
         amount = None
 
-    if amount is None or amount <= 0:
+    if amount is None or not math.isfinite(amount) or amount <= 0:
         error = "Enter a valid amount greater than zero."
     elif category not in EXPENSE_CATEGORIES:
         error = "Choose a valid category."
