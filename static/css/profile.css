@@ -105,6 +105,27 @@
     display: block;
 }
 
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.panel-header .dash-panel-title {
+    margin-bottom: 0;
+}
+
+.panel-header-link {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    text-decoration: underline;
+}
+
+.panel-header-link:hover {
+    color: var(--accent);
+}
+
 .profile-table {
     width: 100%;
     border-collapse: collapse;

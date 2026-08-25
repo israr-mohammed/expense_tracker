@@ -88,3 +88,16 @@ def get_category_breakdown(user_id, start_date=None, end_date=None):
         {"category": row["category"], "total": row["total"], "percent": pct}
         for row, pct in zip(rows, percents)
     ]
+
+
+def create_expense(user_id, amount, category, description, date):
+    conn = get_db()
+    cur = conn.execute(
+        "INSERT INTO expenses (user_id, amount, category, description, date) "
+        "VALUES (?, ?, ?, ?, ?)",
+        (user_id, amount, category, description, date),
+    )
+    conn.commit()
+    expense_id = cur.lastrowid
+    conn.close()
+    return expense_id

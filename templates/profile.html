@@ -48,6 +48,7 @@
                            value="{{ end_date or '' }}">
                 </div>
                 <button type="submit" class="btn-primary filter-submit">Apply</button>
+                <a href="{{ url_for('add_expense') }}" class="btn-primary filter-submit">Add expense</a>
                 {% if start_date and end_date %}
                 <a href="{{ url_for('profile') }}" class="filter-clear">Clear filter</a>
                 {% endif %}
@@ -55,7 +56,10 @@
         </div>
 
         <div class="dash-panel profile-panel">
-            <h2 class="dash-panel-title">Recent transactions</h2>
+            <div class="panel-header">
+                <h2 class="dash-panel-title">Recent transactions</h2>
+                <a href="{{ url_for('add_expense') }}" class="panel-header-link">Add expense</a>
+            </div>
             <table class="profile-table">
                 <thead>
                     <tr>
