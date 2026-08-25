@@ -55,7 +55,10 @@
         </div>
 
         <div class="dash-panel profile-panel">
-            <h2 class="dash-panel-title">Recent transactions</h2>
+            <div class="panel-header">
+                <h2 class="dash-panel-title">Recent transactions</h2>
+                <a href="{{ url_for('add_expense') }}" class="panel-header-link">Add expense</a>
+            </div>
             <table class="profile-table">
                 <thead>
                     <tr>
