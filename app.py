@@ -6,6 +6,7 @@ from flask import Flask, redirect, render_template, request, session, url_for
 
 from database.db import create_user, get_user_by_email, verify_user
 from database.queries import (
+    create_expense,
     get_category_breakdown,
     get_recent_transactions,
     get_summary_stats,
@@ -17,6 +18,10 @@ app = Flask(__name__)
 app.secret_key = "dev-secret-key-change-in-production"
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+EXPENSE_CATEGORIES = [
+    "Bills", "Food", "Health", "Transport", "Others",
+    "Entertainment", "Shopping",
+]
 
 
 # ------------------------------------------------------------------ #
@@ -125,6 +130,16 @@ def _parse_date_range(start_raw, end_raw):
     return start_raw, end_raw
 
 
+def _parse_single_date(raw):
+    if not raw:
+        return None
+    try:
+        datetime.strptime(raw, "%Y-%m-%d")
+    except ValueError:
+        return None
+    return raw
+
+
 @app.route("/profile")
 def profile():
     if not session.get("user_id"):
@@ -165,9 +180,53 @@ def analytics():
     return render_template("analytics.html")
 
 
-@app.route("/expenses/add")
+@app.route("/expenses/add", methods=["GET", "POST"])
 def add_expense():
-    return "Add expense — coming in Step 7"
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    if request.method != "POST":
+        today = datetime.now().strftime("%Y-%m-%d")
+        return render_template(
+            "add_expense.html",
+            categories=EXPENSE_CATEGORIES,
+            amount="",
+            category="",
+            description="",
+            date=today,
+        )
+
+    amount_raw = request.form.get("amount", "").strip()
+    category = request.form.get("category", "").strip()
+    description = request.form.get("description", "").strip()
+    date_raw = request.form.get("date", "").strip()
+
+    error = None
+    try:
+        amount = float(amount_raw)
+    except ValueError:
+        amount = None
+
+    if amount is None or amount <= 0:
+        error = "Enter a valid amount greater than zero."
+    elif category not in EXPENSE_CATEGORIES:
+        error = "Choose a valid category."
+    elif _parse_single_date(date_raw) is None:
+        error = "Enter a valid date."
+
+    if error:
+        return render_template(
+            "add_expense.html",
+            categories=EXPENSE_CATEGORIES,
+            amount=amount_raw,
+            category=category,
+            description=description,
+            date=date_raw,
+            error=error,
+        )
+
+    create_expense(session["user_id"], amount, category, description, date_raw)
+    return redirect(url_for("profile"))
 
 
 @app.route("/expenses/<int:id>/edit")
