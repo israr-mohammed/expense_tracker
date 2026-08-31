@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Delete expense — Expense Tracker{% endblock %}
+
+{% block content %}
+
+<section class="auth-section">
+    <div class="auth-container">
+
+        <div class="auth-header">
+            <h1 class="auth-title">Delete expense</h1>
+            <p class="auth-subtitle">Confirm you want to remove this transaction</p>
+        </div>
+
+        <div class="auth-card">
+            <div class="auth-error">
+                This action cannot be undone.
+            </div>
+
+            <div class="form-group">
+                <label>Date</label>
+                <p>{{ expense.date }}</p>
+            </div>
+            <div class="form-group">
+                <label>Category</label>
+                <p>
+                    <span class="category-badge category-badge-{{ expense.category|lower }}">
+                        {{ expense.category }}
+                    </span>
+                </p>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <p>{{ expense.description }}</p>
+            </div>
+            <div class="form-group">
+                <label>Amount</label>
+                <p>₹{{ "%.2f"|format(expense.amount) }}</p>
+            </div>
+
+            <form method="POST" action="{{ url_for('delete_expense', id=expense.id) }}">
+                <button type="submit" class="btn-danger">Delete</button>
+            </form>
+        </div>
+
+        <p class="auth-switch">
+            <a href="{{ url_for('profile') }}">Cancel</a>
+        </p>
+
+    </div>
+</section>
+
+{% endblock %}
