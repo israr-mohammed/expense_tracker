@@ -58,7 +58,7 @@ def get_recent_transactions(user_id, limit=10, start_date=None, end_date=None):
     clause, extra = _range_filter(start_date, end_date)
     params = [user_id] + extra + [limit]
     rows = conn.execute(
-        "SELECT date, description, category, amount FROM expenses "
+        "SELECT id, date, description, category, amount FROM expenses "
         "WHERE user_id = ?" + clause + " ORDER BY date DESC, id DESC LIMIT ?",
         params,
     ).fetchall()
@@ -101,3 +101,27 @@ def create_expense(user_id, amount, category, description, date):
     expense_id = cur.lastrowid
     conn.close()
     return expense_id
+
+
+def get_expense_by_id(expense_id, user_id):
+    conn = get_db()
+    row = conn.execute(
+        "SELECT id, amount, category, description, date FROM expenses "
+        "WHERE id = ? AND user_id = ?",
+        (expense_id, user_id),
+    ).fetchone()
+    conn.close()
+    if row is None:
+        return None
+    return dict(row)
+
+
+def update_expense(expense_id, user_id, amount, category, description, date):
+    conn = get_db()
+    conn.execute(
+        "UPDATE expenses SET amount = ?, category = ?, description = ?, date = ? "
+        "WHERE id = ? AND user_id = ?",
+        (amount, category, description, date, expense_id, user_id),
+    )
+    conn.commit()
+    conn.close()
