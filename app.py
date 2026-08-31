@@ -8,6 +8,7 @@ from flask import Flask, abort, redirect, render_template, request, session, url
 from database.db import create_user, get_user_by_email, verify_user
 from database.queries import (
     create_expense,
+    delete_expense,
     get_category_breakdown,
     get_expense_by_id,
     get_recent_transactions,
@@ -286,9 +287,20 @@ def edit_expense(id):
     return redirect(url_for("profile"))
 
 
-@app.route("/expenses/<int:id>/delete")
-def delete_expense(id):
-    return "Delete expense — coming in Step 9"
+@app.route("/expenses/<int:id>/delete", methods=["GET", "POST"], endpoint="delete_expense")
+def delete_expense_view(id):
+    if not session.get("user_id"):
+        return redirect(url_for("login"))
+
+    expense = get_expense_by_id(id, session["user_id"])
+    if expense is None:
+        abort(404)
+
+    if request.method != "POST":
+        return render_template("delete_expense.html", expense=expense)
+
+    delete_expense(id, session["user_id"])
+    return redirect(url_for("profile"))
 
 
 if __name__ == "__main__":
