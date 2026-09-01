@@ -1,11 +1,12 @@
 import math
+import os
 import re
 import sqlite3
 from datetime import datetime
 
 from flask import Flask, abort, redirect, render_template, request, session, url_for
 
-from database.db import create_user, get_user_by_email, verify_user
+from database.db import create_user, get_user_by_email, init_db, verify_user
 from database.queries import (
     create_expense,
     delete_expense,
@@ -18,8 +19,9 @@ from database.queries import (
 )
 
 app = Flask(__name__)
-# TODO: move to an environment variable before any real deployment
-app.secret_key = "dev-secret-key-change-in-production"
+app.secret_key = os.environ.get("SECRET_KEY", "dev-secret-key-change-in-production")
+
+init_db()
 
 EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 EXPENSE_CATEGORIES = [

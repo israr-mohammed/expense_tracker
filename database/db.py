@@ -1,9 +1,10 @@
+import os
 import sqlite3
 from pathlib import Path
 
 from werkzeug.security import check_password_hash, generate_password_hash
 
-DB_PATH = Path(__file__).parent.parent / "expense_tracker.db"
+DB_PATH = Path(os.environ.get("DB_PATH", Path(__file__).parent.parent / "expense_tracker.db"))
 
 
 def get_db():
